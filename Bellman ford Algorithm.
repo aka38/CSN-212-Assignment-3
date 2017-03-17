@@ -1,1 +1,91 @@
 
+#include<bits/stdc++.h>
+using namespace std;
+#define MP          make_pair
+#define PB          push_back
+#define LL          long long
+#define MAX         1000005
+#define debug(a)    cout<<a<<"\n"
+#define sd(a)       scanf("%d",&a)
+#define sc(a)       scanf("%c",&a)
+#define ss(a)       scanf("%s",&a)
+#define mx(a,b,c)   max(a,max(b,c))
+#define mn(a,b,c)   min(a,min(b,c))
+#define pred(a)     printf("%0.6lf",a)
+#define rep(i,x,b)  for(int i=x;i<b;i++)
+#define rf          freopen("input1.in", "r", stdin)
+#define wf          freopen("out.out", "w", stdout)
+#define fast()      ios_base::sync_with_stdio(0)
+#define chloop(i,j) cout<<"i:"<<i<<" j:"<<j<<"\n"
+#define sz(x)       x.size()
+#define mst(x,a)    memset(x,a,sizeof(x))
+#define pii         pair<LL,LL>
+#define inf         1000000007
+#define F            first;
+#define S            second;    
+
+vector<pii> g;
+map<pii,int>weight;
+int n;
+void Bellman_Ford(int src)
+{
+	int distance[n+1];
+	for(int i=1;i<=n;i++)
+		distance[i]=inf;
+	distance[src]=0;
+	for(int i=0;i<n-1;i++)
+	{
+		for(int j=0;j<sz(g);j++)
+		{
+			int u=g[j].F;
+			int v=g[j].S;
+			if(distance[u]+weight[MP(u,v)]<distance[v]&&distance[u]!=inf)
+				distance[v]=distance[u]+weight[MP(u,v)];
+		}
+
+	}
+	for(int i=0;i<sz(g);i++)
+	{
+		int u=g[i].F;
+		int v=g[i].S;
+		if(distance[u]+weight[MP(u,v)]<distance[v]&&distance[u]!=inf)
+		{
+			cout<<"Spanning tree of "<<src<<" contains negative cycle\n"; break;
+			
+		}
+	}
+	cout<<"distances from "<<src<<"->";
+	for(int i=1;i<=n;i++)
+	{
+		if(distance[i]!=1000000007)
+			cout<<distance[i]<<" ";
+			else cout<<"Inf ";
+	}
+	cout<<"\n";
+	return;
+}
+int main()
+{
+  
+    double start_time=clock();
+    cout<<"Enter the no. of vertices\n";
+  	cin>>n;
+  	cout<<"Enter the adjacency matrix\n";
+  	int a;
+  	for(int i=1;i<=n;i++)
+  		for(int j=1;j<=n;j++)
+  		{
+  			cin>>a;
+  			if(a!=0)
+  			{
+  				g.PB(MP(i,j));
+  				weight[MP(i,j)]=a;
+  			}
+  		}
+  cout<<"-------------------------------------------------------\n";
+  	for(int i=1;i<=n;i++)
+  		Bellman_Ford(i);
+  	double stop_time=clock();
+	cout << "Running Time: " << (stop_time-start_time)/double(CLOCKS_PER_SEC)*1000.0 << "\n";
+
+}
